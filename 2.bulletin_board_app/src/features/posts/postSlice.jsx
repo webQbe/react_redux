@@ -1,4 +1,4 @@
-/* Redux slice - manage the posts' initial state */
+/* Manage 'posts' State*/
 import { createSlice } from "@reduxjs/toolkit";
 
 // Initial state : an array of posts, each with an id, title, and content
@@ -11,11 +11,20 @@ const initialState = [
 const postsSlice = createSlice({
     name: 'posts',
     initialState,
-    reducers: {} // Currently, no reducers defined, posts cannot be added, edited, or deleted yet.
+    reducers: { 
+        /* Add reducer to be dispatched by other components */
+        postAdded(state, action){
+            // Take new post object and add it to the state array
+            state.push(action.payload) 
+        }
+    } 
 })
 
 // Allow components to retrieve all posts from the Redux store
 export const selectAllPosts = (state) => state.posts;
+
+// Export the postAdded action
+export const { postAdded } = postsSlice.actions
 
 // Export the Reducer, so that it can be used in the Redux store
 export default postsSlice.reducer
