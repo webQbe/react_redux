@@ -8,11 +8,15 @@ const PostsList = () => {
     // Retrieve Posts from Redux Store
     const posts = useSelector(selectAllPosts) 
 
-    // Map over the list of posts and creates <article> elements for each post
+    // Sort Posts by Newest First
+    const orderedPosts = posts.slice() // Create a shallow copy of the posts array
+                              .sort((a, b) => b.date.localeCompare(a.date)) // Sort posts in descending order (newest posts first) 
+
+    // Map through orderedPosts and create <article> elements for each post
     // Use substring(0, 100) to limit content to 100 characters
     // Include <PostAuthor /> component for each post, pass post.userId as a prop
-    // Includes <TimeAgo> inside each post, pass post.date as a prop
-    const renderedPosts = posts.map(post => (
+    // Include <TimeAgo> inside each post, pass post.date as a prop
+    const renderedPosts = orderedPosts.map(post => (
         <article key={post.id}>
             <h3>{post.title}</h3>
             <p>{post.content.substring(0, 100)}</p>
