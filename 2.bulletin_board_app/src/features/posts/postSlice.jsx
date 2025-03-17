@@ -1,10 +1,24 @@
 /* Manage 'posts' State*/
 import { createSlice, nanoid } from "@reduxjs/toolkit";
+import { sub } from 'date-fns'; // to set sample post timestamps
 
 // Initial state : an array of posts, each with an id, title, and content
 const initialState = [
-    { id: '1', title: 'Learning Redux Toolkit', content: "I've heard good things." },
-    { id: '2', title: 'Slices...', content: "The more I say slice, the more I want pizza." }
+    { 
+        id: '1', 
+        title: 'Learning Redux Toolkit',
+        content: "I've heard good things.", 
+        date: sub(new Date(), 
+                    // Subtract minutes from the current time to simulate past posts
+                    { minutes: 10 }
+                 ).toISOString() // Convert the date to an ISO string
+    },
+    { 
+        id: '2', 
+        title: 'Slices...', 
+        content: "The more I say slice, the more I want pizza.", 
+        date: sub(new Date(), { minutes: 5 }).toISOString() // 5 minutes ago
+    }
 ]
 
 // Create postsSlice with the name 'posts', using the 'initialState'
@@ -26,6 +40,7 @@ const postsSlice = createSlice({
                                 id: nanoid(), // Generate unique ID
                                 title,
                                 content,
+                                date: new Date().toISOString(),// New posts get the current timestamp
                                 userId // Store the user who created the post
                             } 
                             /* Formats the action payload before passing it to the reducer */
