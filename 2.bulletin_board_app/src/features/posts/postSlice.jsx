@@ -20,12 +20,13 @@ const postsSlice = createSlice({
                         state.push(action.payload) 
                     },
                     // Use prepare() to keep the action preparation separate
-                    prepare(title, content) {
+                    prepare(title, content, userId) {
                         return {
                             payload: {
                                 id: nanoid(), // Generate unique ID
                                 title,
-                                content
+                                content,
+                                userId // Store the user who created the post
                             } 
                             /* Formats the action payload before passing it to the reducer */
                         }
