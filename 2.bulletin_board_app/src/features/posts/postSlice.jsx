@@ -1,5 +1,5 @@
 /* Manage 'posts' State*/
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, nanoid } from "@reduxjs/toolkit";
 
 // Initial state : an array of posts, each with an id, title, and content
 const initialState = [
@@ -13,10 +13,24 @@ const postsSlice = createSlice({
     initialState,
     reducers: { 
         /* Add reducer to be dispatched by other components */
-        postAdded(state, action){
-            // Take new post object and add it to the state array
-            state.push(action.payload) 
-        }
+        postAdded: {
+                // reducer() function only handles state updates
+                reducer(state, action){
+                        // Take new post and add it to the state array
+                        state.push(action.payload) 
+                    },
+                    // Use prepare() to keep the action preparation separate
+                    prepare(title, content) {
+                        return {
+                            payload: {
+                                id: nanoid(), // Generate unique ID
+                                title,
+                                content
+                            } 
+                            /* Formats the action payload before passing it to the reducer */
+                        }
+                    }
+            }
     } 
 })
 

@@ -25,15 +25,12 @@ const AddPostForm = () => {
         if (title && content) { // Check if the title and content fields are filled
 
             dispatch(
-                /* Dispatch postAdded(newPost) to update the Redux store */
-                postAdded(
-                    /* Create a new post object  */
-                    { 
-                        id: nanoid(), // A unique id using nanoid()
-                        title,
-                        content
-                    }
-                )
+                // Update the Redux store
+                postAdded(title, content) 
+                /* Cleaner Dispatch Call: 
+                    The slice handles payload preparation internally.
+                    The component no longer needs to create an object for the new post.
+                 */
             )
             /* Clear the input fields after submitting. */
             setTitle('')
