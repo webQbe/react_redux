@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'; // Used to fetch posts
 import { selectAllPosts } from './postSlice'; // Retrieve all posts from the Redux store
 import PostAuthor from './PostAuthor'; // Render Posts with Author Info
 import TimeAgo from './TimeAgo'; // Render Posts with Timestamps
+import ReactionButtons from './ReactionButtons' // Render Posts with Reaction Buttons and Counts
 
 const PostsList = () => {
     // Retrieve Posts from Redux Store
@@ -24,6 +25,7 @@ const PostsList = () => {
                 <PostAuthor userId={post.userId} /> {/* Display Author */}
                 <TimeAgo timestamp={post.date} /> {/* Display Timestamp */}
             </p>
+            <ReactionButtons post={post}/> {/* Include reaction buttons for each post */}
         </article>
     ))
 
