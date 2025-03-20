@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { postAdded } from './postSlice'; // to dispatch the postAdded action
+import { addNewPost } from './postSlice'; 
 import { selectAllUsers } from '../users/usersSlice'; 
 
 const AddPostForm = () => {
@@ -15,6 +15,10 @@ const AddPostForm = () => {
     const [title, setTitle ] = useState('');
     const [content, setContent ] = useState('');
     const [userId, setUserId ] = useState('');
+
+    // Request Status State
+    const [addRequestStatus, setAddRequestStatus] = useState('idle') // default: 'idle' (no requests)
+
     // Get users from Redux store
     const users = useSelector(selectAllUsers);
 
@@ -24,27 +28,30 @@ const AddPostForm = () => {
     const onContentChanged = e => setContent(e.target.value);
     const onAuthorChanged = e => setUserId(e.target.value);
 
-    /* Dispatching postAdded When "Save Post" Is Clicked */
-    const onSavePostClicked = () => {
-        if (title && content) { // Check if the title and content fields are filled
+    // Tracks form input values & ensure all fields are filled
+    const canSave = [title, content, userId].every(Boolean) && addRequestStatus === 'idle';
 
-            dispatch(
-                // Update the Redux store
-                postAdded(title, content, userId) // Include selected userId in new post
-                /* Cleaner Dispatch Call: 
-                    The slice handles payload preparation internally.
-                    The component no longer needs to create an object for the new post.
-                 */
-            )
-            /* Clear the input fields after submitting. */
-            setTitle('')
-            setContent('')
+    /* Handle post submission */
+    const onSavePostClicked = () => {
+        if (canSave) {
+            try {
+                // Set request status to pending
+                setAddRequestStatus('pending')
+                // Dispatch addNewPost() & unwrap the promise
+                dispatch(addNewPost({ title, body: content, userId })).unwrap()
+                // Reset form fields after a successful request
+                setTitle('')
+                setContent('')
+                setUserId('')
+            } catch (err) { 
+                // Handles errors
+                console.error('Failed to save the post', err)
+            } finally {
+                // Resets request status to 'idle'
+                setAddRequestStatus('idle')
+            }
         }
     }
-
-    // Check if all three values are truthy
-    const canSave = Boolean(title) && Boolean(content) && Boolean(userId)
-    /* If title, content, and userId all exist (not empty, null, or undefined) → canSave is true, if any of them are missing → canSave is false. */
 
     /* Create a list of <option> elements for <select> dropdown */
     const usersOptions = users.map( // Iterate over the users array from Redux state

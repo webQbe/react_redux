@@ -25,6 +25,14 @@ export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
     }
 })
 
+// Async Thunk 
+export const addNewPost = createAsyncThunk('posts/addNewPost', async (initialPost) => {
+    // Send new post to API
+    const response = await axios.post(POSTS_URL, initialPost)
+    // Return response data (new post) when fulfilled
+    return response.data
+})
+
 // Create postsSlice with the name 'posts', using the 'initialState'
 const postsSlice = createSlice({
     name: 'posts',
@@ -96,12 +104,35 @@ const postsSlice = createSlice({
                     }
                     return post;
                 });
-                state.posts = state.posts.concat(loadedPosts)
+                state.posts = loadedPosts; // Replace entire posts array with loadedPosts
             })  
             // Handling Rejected state 
             .addCase(fetchPosts.rejected, (state, action) => {
                 state.status = 'failed' // Mark state.status as "failed"
                 state.error = action.error.message // store the error
+            })
+            .addCase(addNewPost.fulfilled, (state, action) => {
+                // Sort posts by id before adding a new post
+                const sortedPosts = state.posts.sort((a, b) => {
+                    if (a.id > b.id) return 1
+                    if (a.id < b.id) return -1
+                    return 0
+                })
+                // Generate a unique ID for the new post based on highest post id
+                action.payload.id = sortedPosts[sortedPosts.length - 1].id + 1;
+
+                /* Format new post data */
+                action.payload.userId = Number(action.payload.userId) // Convert userId to a number
+                action.payload.date = new Date().toISOString(); // Assign the current date
+                action.payload.reactions = { // Init reactions as an empty object
+                    thumbsUp: 0,
+                    hooray: 0,
+                    heart: 0,
+                    rocket: 0,
+                    eyes: 0
+                }
+                console.log(action.payload) // Console log post data
+                state.posts.push(action.payload) // Adds the new post to state.posts
             })
     } 
 })
