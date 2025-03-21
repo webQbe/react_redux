@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 const PostsExcerpt = ({ post }) => { // Receive post as a prop from PostsList.jsx
   return (
     <article>
-            <h3>{post.title}</h3>
+            <h2>{post.title}</h2>
             <p className='excerpt'>{post.body.substring(0, 75)}...</p> {/* Show only first 75 characters of the post*/}
             <p className="postCredit">
                 <Link to={`post/${post.id}`}>View Post</Link> {/* "View Post" button links to /post/:postId */}

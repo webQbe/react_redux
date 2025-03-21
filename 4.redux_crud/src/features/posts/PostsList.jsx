@@ -43,7 +43,6 @@ const PostsList = () => {
     // Return JSX to Display all posts inside <section>
     return(
         <section>
-            <h2>Posts</h2>
             {content}
         </section>
     )
