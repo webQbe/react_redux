@@ -29,10 +29,11 @@
 5. Install dependencies: Open terminal and run `npm install`
 
 6. Install packages: 
-    **1. `Redux Toolkit`**, 
-    **2. `date-fns`**, 
+    **1. `Redux Toolkit`** 
+    **2. `date-fns`** 
     **3. `Axios`**
-    **Run:** `npm i @reduxjs/toolkit react-redux date-fns axios`
+    **4. `React Router 6+`**
+    **Run:** `npm i @reduxjs/toolkit react-redux date-fns axios react-router-dom`
 
 7. Delete: `public/vite.svg`, `src/assets`, `src/App.css`
 8. Modify `src/App.jsx` and `src/main.jsx`

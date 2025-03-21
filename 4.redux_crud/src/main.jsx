@@ -1,4 +1,4 @@
-/* Main Entry Point */
+/* Root of the App */
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
@@ -6,6 +6,7 @@ import App from './App.jsx';
 import { store } from './app/store.jsx';
 import { Provider } from 'react-redux';
 import { fetchUsers } from './features/users/usersSlice.jsx';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 // Dispatch fetchUsers() immediately when the app starts
 store.dispatch(fetchUsers());
@@ -18,7 +19,11 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-     <App />
+     <Router> {/* Wrap the App inside <BrowserRouter> so that routing works */}
+      <Routes> {/* App is rendered inside <Routes> */}
+        <Route path='/*' element={<App />} />
+      </Routes>
+     </Router>
     </Provider>
   </React.StrictMode>
 );
