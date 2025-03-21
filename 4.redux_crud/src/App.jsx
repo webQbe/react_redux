@@ -9,15 +9,24 @@ import { Routes, Route } from "react-router-dom"; // To define different routes
 function App() {
   /* Manage the routing structure of the app */
   return (
+
         <Routes> {/* Define multiple nested routes */}
-          <Route path="/" element={ <Layout /> } />
-          <Route index element={ <PostsList /> } /> {/* List of all posts */}
-          <Route path="post">
-            <Route index element={ <AddPostForm /> }/> {/* Form to add a new post */}
-            <Route path=":postId" element={ <SinglePostPage /> }/> {/* Detailed view of a post */}
+
+          <Route path="/" element={ <Layout /> }> {/* Layout wrapper for all pages */}
+
+            <Route index element={ <PostsList /> } /> {/* List of all posts */}
+
+            <Route path="post">
+
+              <Route index element={ <AddPostForm /> }/> {/* Form to add a new post */}
+
+              <Route path=":postId" element={ <SinglePostPage /> }/> {/* Detailed view of a post */}
+            
+            </Route>
+            
           </Route>
+
         </Routes>
   );
 }
-
 export default App

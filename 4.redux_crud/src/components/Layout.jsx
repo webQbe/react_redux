@@ -1,11 +1,18 @@
 /* Wrapper Component */
-import { Outlet } from 'react-router-dom'
+import { Outlet } from 'react-router-dom';
+import Header from './Header';
 
 const Layout = () => {
   return (
-    <main className='App'> {/* < layout wrapper for all pages */}
-        <Outlet /> {/* < Tells React Router where to render the nested route content */}
-    </main>
+    <>
+      <Header /> {/* < Header remains visible at the top on all pages */}
+
+      <main className='App'>  {/* < Layout wrapper for all pages */}
+
+          <Outlet /> {/* < Components here change dynamically */}
+
+      </main>
+    </>
   )
 }
 
