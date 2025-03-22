@@ -9,7 +9,8 @@ const POSTS_URL = 'https://jsonplaceholder.typicode.com/posts';
 const initialState = {
     posts: [],
     status: 'idle',
-    error: null
+    error: null,
+    count: 0 // Add count property to track the counter
 }
 
 // Define async thunk to fetch posts from an API
@@ -65,34 +66,6 @@ const postsSlice = createSlice({
     name: 'posts',
     initialState,
     reducers: { 
-        postAdded: {
-                // reducer() function only handles state updates
-                reducer(state, action){
-                        state.posts.push(action.payload) 
-                    },
-                // Use prepare() to keep the action preparation separate
-                prepare(title, content, userId) {
-                        return {
-                            payload: {
-                                id: nanoid(), 
-                                title,
-                                content,
-                                date: new Date().toISOString(),
-                                userId, // Store the user who created the post
-                                // Each post has a reactions object for storing counts
-                                reactions: { 
-                                    thumbsUp: 0,
-                                    wow: 0,
-                                    heart: 0,
-                                    rocket: 0,
-                                    coffee: 0
-                                }
-                            } 
-                            /* Formats the action payload before passing it to the reducer */
-                        }
-                    },
-                
-            },
         /* Reducer for Adding Reactions */
         reactionAdded(state, action){
             // Extract postId & reaction from the payload
@@ -104,6 +77,11 @@ const postsSlice = createSlice({
                 // Increment the selected reaction count.
                 existingPost.reactions[reaction]++
             }
+        },
+        /* increaseCount reducer */
+        increaseCount(state, action){
+            // Update the count state by incrementing it when dispatched
+            state.count = state.count + 1 
         }
     },
     // Handle different fetching states (pending, fulfilled, rejected)
@@ -201,13 +179,17 @@ export const getPostsStatus = (state) => state.posts.status;
 // Export error message
 export const getPostsError = (state) => state.posts.error;
 
+// Export count state in getCount selector
+export const getCount = (state) => state.posts.count;
+
 // Export selectPostById selector
 export const selectPostById = (state, postId) =>
     state.posts.posts.find(post => post.id === postId); 
 /* Used by SinglePostPage.jsx to fetch a single post. */
 
-// Export the postAdded & reactionAdded actions
-export const { postAdded, reactionAdded } = postsSlice.actions
+// Export the increaseCount & reactionAdded actions
+export const { increaseCount, reactionAdded } = postsSlice.actions
+/* Enables components to dispatch the action */
 
 // Export the Reducer, so that it can be used in the Redux store
 export default postsSlice.reducer
