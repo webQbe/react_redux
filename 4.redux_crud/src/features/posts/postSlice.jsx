@@ -25,12 +25,23 @@ export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
     }
 })
 
-// Async Thunk 
+// Handle adding new post
 export const addNewPost = createAsyncThunk('posts/addNewPost', async (initialPost) => {
     // Send new post to API
     const response = await axios.post(POSTS_URL, initialPost)
     // Return response data (new post) when fulfilled
     return response.data
+})
+
+// Handle updating posts
+export const updatePost = createAsyncThunk('posts/updatePost', async (initialPost) => {
+    const { id } = initialPost;
+    try {
+        const response = await axios.put(`${POSTS_URL}/${id}`, initialPost)
+        return response.data
+    } catch (err) {
+        return err.message;
+    }
 })
 
 // Create postsSlice with the name 'posts', using the 'initialState'
@@ -111,6 +122,7 @@ const postsSlice = createSlice({
                 state.status = 'failed' // Mark state.status as "failed"
                 state.error = action.error.message // store the error
             })
+            // When the post request is fulfilled
             .addCase(addNewPost.fulfilled, (state, action) => {
                 // Sort posts by id before adding a new post
                 const sortedPosts = state.posts.sort((a, b) => {
@@ -134,6 +146,21 @@ const postsSlice = createSlice({
                 console.log(action.payload) // Console log post data
                 state.posts.push(action.payload) // Adds the new post to state.posts
             })
+            // When the update request is fulfilled
+            .addCase(updatePost.fulfilled, (state, action) => { 
+                if (!action.payload?.id) {
+                    console.log('Update could not complete')
+                    console.log(action.payload)
+                    return;
+                }
+                const { id } = action.payload;
+                action.payload.date = new Date().toISOString();
+                // Filter out the old post by id
+                const posts = state.posts.filter(post => post.id !== id);
+                // Add the updated post to the list
+                state.posts = [...posts, action.payload];
+            })
+
     } 
 })
 
