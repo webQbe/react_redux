@@ -5,12 +5,19 @@ import './index.css';
 import App from './App.jsx';
 import { store } from './app/store.jsx';
 import { Provider } from 'react-redux';
-import { fetchUsers } from './features/users/usersSlice.jsx';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+/* Import Actions */
+import { fetchPosts } from './features/posts/postSlice.jsx'; 
+import { fetchUsers } from './features/users/usersSlice.jsx';
 
-// Dispatch fetchUsers() immediately when the app starts
+// Dispatch fetchPosts before rendering
+store.dispatch(
+                fetchPosts() /* Any component that use useSelector to access posts will have the latest data when the app starts. */
+              );
+
+// Dispatch fetchUsers
 store.dispatch(fetchUsers());
-/* Ensures the Redux store gets populated with user data before any components use it. */
+
 
 // Create a root node for rendering
 const root = ReactDOM.createRoot(document.getElementById('root'));
