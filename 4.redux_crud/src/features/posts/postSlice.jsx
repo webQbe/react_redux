@@ -44,6 +44,19 @@ export const updatePost = createAsyncThunk('posts/updatePost', async (initialPos
     }
 })
 
+// Handle deleting posts
+export const deletePost = createAsyncThunk('delete/deletePost', async (initialPost) => {
+    const { id } = initialPost;
+    try{
+        // Send DELETE request to remove the post from the API
+        const response = await axios.delete(`${POSTS_URL}/${id}`)
+        if (response?.status === 200) return initialPost; // Return the deleted post if successful 
+        return `${response?.status}: ${response?.statusText}`; // Otherwise, return status
+    } catch (err) {
+        return err.message; // If unsuccessful, return an error message.
+    }
+ })
+
 // Create postsSlice with the name 'posts', using the 'initialState'
 const postsSlice = createSlice({
     name: 'posts',
@@ -159,6 +172,20 @@ const postsSlice = createSlice({
                 const posts = state.posts.filter(post => post.id !== id);
                 // Add the updated post to the list
                 state.posts = [...posts, action.payload];
+            })
+            // When the delete request is fulfilled
+            .addCase(deletePost.fulfilled, (state, action) => {
+                // Check if the payload contains a valid id
+                if(!action.payload?.id){ 
+                    // Log an error message and exits
+                    console.log('Delete could not complete')
+                    console.log(action.payload)
+                    return;
+                }
+                // Otherwise, filter out the deleted post from the state.posts array
+                const { id } = action.payload;
+                const posts = state.posts.filter(post => post.id !== id);
+                state.posts = posts;
             })
 
     } 

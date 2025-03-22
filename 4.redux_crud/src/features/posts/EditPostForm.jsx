@@ -1,6 +1,6 @@
 import { use, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectPostById, updatePost } from './postSlice';
+import { selectPostById, updatePost, deletePost } from './postSlice';
 import { useParams, useNavigate } from 'react-router-dom';
 
 import { selectAllUsers } from '../users/usersSlice';
@@ -10,7 +10,7 @@ const EditPostForm = () => {
 
     /* Fetch the Post to Edit */
     const { postId } = useParams(); // extract postId from URL
-    const navigate = useNavigate();
+    const navigate = useNavigate(); // To redirect
 
     // Fetch the post by its ID from the Redux store
     const post = useSelector((state) => selectPostById(state, Number(postId)));
@@ -79,6 +79,23 @@ const EditPostForm = () => {
         </option>
     ))
 
+    const onDeletePostClicked = () => {
+        try{
+            setRequestStatus('pending')
+            // Dispatch deletePost action with post's ID
+            dispatch(deletePost({ id: post.id })).unwrap() 
+
+            setTitle('')
+            setContent('')
+            setUserId('')
+            navigate('/') // Navigate back to the homepage
+        } catch (err) {
+            console.log('Failed to delete the post', err)
+        } finally {
+            setRequestStatus('idle')
+        }
+    }
+
     /* Rendering the Form */
     return (
         <section>
@@ -103,12 +120,20 @@ const EditPostForm = () => {
                     id="postContent"
                     value={content}
                     onChange={onContentChanged} />
+                {/* Render Save button */}
                 <button
                     type='button'
                     onClick={onSavePostClicked}
-                    disabled={!canSave} // button is disabled unless all conditions in canSave are met
+                    disabled={!canSave}// Disable unless all conditions in canSave are met
                 >
                     Save Post
+                </button>
+                {/* Render delete button */}
+                <button className='deleteButton'
+                    type="button"
+                    onClick={onDeletePostClicked} // Trigger onDeletePostClicked()
+                >
+                        Delete Post
                 </button>
             </form>
         </section>

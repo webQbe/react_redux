@@ -4,11 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { addNewPost } from './postSlice'; 
 import { selectAllUsers } from '../users/usersSlice'; 
+import { useNavigate } from 'react-router-dom';
 
 const AddPostForm = () => {
-
-    // Get the dispatch() function
-    const dispatch = useDispatch();
+    const dispatch = useDispatch() // To dispatch
+    const navigate = useNavigate() // To redirect
 
     /* State for Form Inputs */
     // States for Form Inputs to store user input for the post title and content
@@ -38,11 +38,15 @@ const AddPostForm = () => {
                 // Set request status to pending
                 setAddRequestStatus('pending')
                 // Dispatch addNewPost() & unwrap the promise
-                dispatch(addNewPost({ title, body: content, userId })).unwrap()
+                dispatch(addNewPost({ title, body: content, userId }))
+                                    .unwrap() // Extract the actual fulfilled value or throw the error if the action was rejected
+
+
                 // Reset form fields after a successful request
                 setTitle('')
                 setContent('')
                 setUserId('')
+                navigate('/') // After adding a new post, redirect to homepage
             } catch (err) { 
                 // Handles errors
                 console.error('Failed to save the post', err)
