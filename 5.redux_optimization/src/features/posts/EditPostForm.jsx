@@ -37,8 +37,8 @@ const EditPostForm = () => {
 
     const onTitleChanged = e => setTitle(e.target.value);
     const onContentChanged = e => setContent(e.target.value);
-    const onAuthorChanged = e => setUserId(e.target.value);
-    
+    const onAuthorChanged = e => setUserId( // Pass user id as a number
+                                            Number(e.target.value) ); 
     /* Save the Edited Post */
     // Ensure all fields are filled and no other request is in progress
     const canSave = [title, content, userId].every(Boolean) && requestStatus === 'idle';

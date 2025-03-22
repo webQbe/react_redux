@@ -3,7 +3,8 @@
 1. ([Implementing **Redux Toolkit** for Global State Management with React](https://github.com/webQbe/redux_toolkit))
 2. Building a simple **React Bulletin Board** app
 3. Creating Async Redux Thunk to **Fetch data** from and **Post data** to a REST API
-4. Creating a Blog App that supports all Redux CRUD operations
+4. Creating a Blog App that supports all Redux **CRUD operations**
+5. Applying **Optimization Techniques** to React-Redux Blog App project
 
 
 ## Getting Started 

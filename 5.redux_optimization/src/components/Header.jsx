@@ -16,6 +16,9 @@ const Header = () => {
                     <li><Link to="/">Home</Link></li> {/* Link to homepage */}
 
                     <li><Link to="post">Post</Link></li> {/* Link to post creation page */}
+                    
+                    <li><Link to="user">Users</Link></li> {/*  Link to UsersList */}
+                    
                 </ul>
 
             </nav>
