@@ -39,4 +39,4 @@
 7. Delete: `public/vite.svg`, `src/assets`, `src/App.css`
 8. Modify `src/App.jsx` and `src/main.jsx`
 9. Run frontend server with: `npm run dev`
-10. Install **Redux Dev Tools** browser extension
+10. Install **React Dev Tools** and **Redux Dev Tools** browser extension

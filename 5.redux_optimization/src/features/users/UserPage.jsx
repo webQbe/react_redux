@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux'
 import { selectUserById } from './usersSlice' // to fetch a user by ID
-import { selectAllPosts } from '../posts/postSlice'
+import { selectAllPosts, selectPostsByUser } from '../posts/postSlice'
 import { Link, useParams } from 'react-router-dom'
 
 const UserPage = () => {
@@ -9,11 +9,9 @@ const UserPage = () => {
     // Select the user from Redux store
     const user = useSelector(state => selectUserById(state, Number(userId)))
 
-    // Filter all posts in the store to show only those written by the user
-    const postsForUser = useSelector(state => {
-        const allPosts = selectAllPosts(state)
-        return allPosts.filter(post => post.userId === Number(userId))
-    })
+    // Get posts for a specific user
+    const postsForUser = useSelector(state => selectPostsByUser(state, Number(userId))) 
+    /* This improves performance because createSelector memoizes the results, preventing unnecessary re-renders if the state hasn't changed. */
 
     // Display a title list of the user's posts as links
     const postTitles = postsForUser.map(post => (

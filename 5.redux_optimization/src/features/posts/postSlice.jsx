@@ -1,5 +1,5 @@
 /* Redux State Management */
-import { createSlice, nanoid, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, createSelector } from "@reduxjs/toolkit";
 import { sub } from 'date-fns'; 
 import axios from 'axios';
 
@@ -186,6 +186,16 @@ export const getCount = (state) => state.posts.count;
 export const selectPostById = (state, postId) =>
     state.posts.posts.find(post => post.id === postId); 
 /* Used by SinglePostPage.jsx to fetch a single post. */
+
+// Define and Export Memoized Selector 
+export const selectPostsByUser = createSelector(
+    [   /* Input selectors */
+        selectAllPosts, // Retrieves all posts from the Redux state 
+        (state, userId) => userId // Extracts userId from the state
+    ], 
+    // Filter posts based on userId
+    (posts, userId) => posts.filter(post => post.userId === userId)
+)
 
 // Export the increaseCount & reactionAdded actions
 export const { increaseCount, reactionAdded } = postsSlice.actions
