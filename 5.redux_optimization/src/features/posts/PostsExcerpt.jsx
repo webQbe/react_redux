@@ -5,7 +5,7 @@ import TimeAgo from './TimeAgo'; // Render Posts with Timestamps
 import ReactionButtons from './ReactionButtons' // Render Posts with Reaction Buttons and Counts
 import { Link } from 'react-router-dom';
 
-const PostsExcerpt = ({ post }) => { // Receive post as a prop from PostsList.jsx
+let PostsExcerpt = ({ post }) => { // Receive post as a prop from PostsList.jsx
   return (
     <article>
             <h2>{post.title}</h2>
@@ -19,5 +19,9 @@ const PostsExcerpt = ({ post }) => { // Receive post as a prop from PostsList.js
         </article>
   )
 }
+
+// Wrap the component with React.memo to make it a memoized component
+PostsExcerpt = React.memo(PostsExcerpt)
+/* React will now only re-render this component if its props change. */
 
 export default PostsExcerpt
