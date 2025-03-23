@@ -2,8 +2,9 @@ import { useSelector } from 'react-redux'
 import { selectUserById } from './usersSlice' // to fetch a user by ID
 import { selectAllPosts, selectPostsByUser } from '../posts/postSlice'
 import { Link, useParams } from 'react-router-dom'
+import React from 'react'
 
-const UserPage = () => {
+let UserPage = () => {
     const { userId } = useParams() // Retrieve userId from URL
 
     // Select the user from Redux store
@@ -29,5 +30,7 @@ const UserPage = () => {
         </section>
   )
 }
+
+UserPage = React.memo(UserPage)
 
 export default UserPage
