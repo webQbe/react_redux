@@ -5,6 +5,7 @@
 3. Creating Async Redux Thunk to **Fetch data** from and **Post data** to a REST API
 4. Creating a Blog App that supports all Redux **CRUD operations**
 5. Applying **Optimization Techniques** to React-Redux Blog App project
+6. Creating Todo List App with **RTK Query** 
 
 
 ## Getting Started 
@@ -30,11 +31,16 @@
 5. Install dependencies: Open terminal and run `npm install`
 
 6. Install packages: 
-    **1. `Redux Toolkit`** 
-    **2. `date-fns`** 
-    **3. `Axios`**
-    **4. `React Router 6+`**
-    **Run:** `npm i @reduxjs/toolkit react-redux date-fns axios react-router-dom`
+    - **1. `Redux Toolkit`** 
+    - **2. `date-fns`** 
+    - **3. `Axios`**
+    - **4. `React Router 6+`**
+    - **5. `FontAwesome`**
+
+    **Run:** 
+    ```
+    npm i @reduxjs/toolkit react-redux date-fns axios react-router-dom @fortawesome/fontawesome-svg-core @fortawesome/free-solid-svg-icons @fortawesome/react-fontawesome
+    ```
 
 7. Delete: `public/vite.svg`, `src/assets`, `src/App.css`
 8. Modify `src/App.jsx` and `src/main.jsx`
