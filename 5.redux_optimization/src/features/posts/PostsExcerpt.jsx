@@ -1,11 +1,18 @@
-/* Post Preview in List */
-import React from 'react'
+/* Displaying a Single Post */
 import PostAuthor from './PostAuthor'; // Render Posts with Author Info
 import TimeAgo from './TimeAgo'; // Render Posts with Timestamps
 import ReactionButtons from './ReactionButtons' // Render Posts with Reaction Buttons and Counts
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { selectPostById } from './postSlice';
 
-let PostsExcerpt = ({ post }) => { // Receive post as a prop from PostsList.jsx
+const PostsExcerpt = ({ postId }) => {
+
+  // Fetch a post by ID
+  const post = useSelector(state => selectPostById(state, postId))
+
+  /* Display post details efficiently by only selecting required data. */
+
   return (
     <article>
             <h2>{post.title}</h2>
@@ -19,9 +26,5 @@ let PostsExcerpt = ({ post }) => { // Receive post as a prop from PostsList.jsx
         </article>
   )
 }
-
-// Wrap the component with React.memo to make it a memoized component
-PostsExcerpt = React.memo(PostsExcerpt)
-/* React will now only re-render this component if its props change. */
 
 export default PostsExcerpt

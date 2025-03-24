@@ -1,5 +1,5 @@
 /* Header Component */
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom" // Re-renders when count updates issue persists
 import { useDispatch, useSelector } from "react-redux"
 import { increaseCount, getCount } from "../features/posts/postSlice"
 

@@ -1,17 +1,27 @@
 /* Redux State Management */
-import { createSlice, createAsyncThunk, createSelector } from "@reduxjs/toolkit";
+import { 
+        createSlice, 
+        createAsyncThunk, 
+        createSelector, 
+        createEntityAdapter 
+    } from "@reduxjs/toolkit";
 import { sub } from 'date-fns'; 
 import axios from 'axios';
 
 const POSTS_URL = 'https://jsonplaceholder.typicode.com/posts';
 
-// Initialize posts with default reactions and timestamps
-const initialState = {
-    posts: [],
+// Simplify CRUD operations by structuring state in an object format (entities and ids)
+const postsAdapter = createEntityAdapter({
+    // Store posts in descending order by date
+    sortComparer: (a, b) => b.date.localeCompare(a.date)
+})
+
+// Provide an initial normalized state
+const initialState = postsAdapter.getInitialState({
     status: 'idle',
     error: null,
     count: 0 // Add count property to track the counter
-}
+})
 
 // Define async thunk to fetch posts from an API
 export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
@@ -68,10 +78,13 @@ const postsSlice = createSlice({
     reducers: { 
         /* Reducer for Adding Reactions */
         reactionAdded(state, action){
+
             // Extract postId & reaction from the payload
             const { postId, reaction } = action.payload
-            // Finds the post by postId in the Redux store.
-            const existingPost = state.posts.find(post => post.id === postId)
+
+            // Retrieve a post from entities object in Redux state
+            const existingPost = state.entities[postId] // postId is used to access a specific post
+
             // If the post is found
             if (existingPost){
                 // Increment the selected reaction count.
@@ -109,7 +122,9 @@ const postsSlice = createSlice({
                     }
                     return post;
                 });
-                state.posts = loadedPosts; // Replace entire posts array with loadedPosts
+
+                // Use upsertMany() to update existing posts and add new ones
+                postsAdapter.upsertMany(state, loadedPosts)
             })  
             // Handling Rejected state 
             .addCase(fetchPosts.rejected, (state, action) => {
@@ -138,7 +153,9 @@ const postsSlice = createSlice({
                     coffee: 0
                 }
                 console.log(action.payload) // Console log post data
-                state.posts.push(action.payload) // Adds the new post to state.posts
+
+                // Use addOne() to insert a single new post
+                postsAdapter.addOne(state, action.payload)
             })
             // When the update request is fulfilled
             .addCase(updatePost.fulfilled, (state, action) => { 
@@ -147,12 +164,10 @@ const postsSlice = createSlice({
                     console.log(action.payload)
                     return;
                 }
-                const { id } = action.payload;
                 action.payload.date = new Date().toISOString();
-                // Filter out the old post by id
-                const posts = state.posts.filter(post => post.id !== id);
-                // Add the updated post to the list
-                state.posts = [...posts, action.payload];
+                
+                // Uses upsertOne() to update or insert a post
+                postsAdapter.upsertOne(state, action.payload)    
             })
             // When the delete request is fulfilled
             .addCase(deletePost.fulfilled, (state, action) => {
@@ -165,15 +180,21 @@ const postsSlice = createSlice({
                 }
                 // Otherwise, filter out the deleted post from the state.posts array
                 const { id } = action.payload;
-                const posts = state.posts.filter(post => post.id !== id);
-                state.posts = posts;
+
+                // Use removeOne() to delete a post
+                postsAdapter.removeOne(state, id)
             })
 
     } 
 })
 
-// Allow components to retrieve all posts from the Redux store
-export const selectAllPosts = (state) => state.posts.posts;
+/* Export Selectors */
+export const {
+    selectAll: selectAllPosts, // Retrieves all posts
+    selectById: selectPostById, // Fetches a post by ID
+    selectIds: selectPostIds // Retrieves an array of post IDs
+} = postsAdapter.getSelectors(state => state.posts)
+
 // Export current status of posts
 export const getPostsStatus = (state) => state.posts.status;
 // Export error message
@@ -181,11 +202,6 @@ export const getPostsError = (state) => state.posts.error;
 
 // Export count state in getCount selector
 export const getCount = (state) => state.posts.count;
-
-// Export selectPostById selector
-export const selectPostById = (state, postId) =>
-    state.posts.posts.find(post => post.id === postId); 
-/* Used by SinglePostPage.jsx to fetch a single post. */
 
 // Define and Export Memoized Selector 
 export const selectPostsByUser = createSelector(

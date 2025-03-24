@@ -24,3 +24,37 @@
 5. Click a reaction button 3x times
 6. Click recording button again to stop recording
 7. Check rendered components
+
+## Normalization 
+- **Recommended in docs:** Normalized state structure is a recommended approach for storing items.
+
+- **No duplication of data:** Normalization means no duplication of data.
+- **Creates an ID lookup:** It also means keeping the item stored in a lookup table by item ID.
+
+
+## State Shape
+A normalized state shape is comprised of an object with an IDs array. 
+And the nested entities object that contains all of the items.
+
+   ```
+   {
+      posts:
+         {
+            ids: [1,2,3,...],
+            entities: {
+               '1':{
+                     userId: 1,
+                     id: 1,
+                     title: ...etc.
+               }
+            }
+         }
+   }
+   ```
+
+### `createEntityAdapter` API
+The best part of using of normalized data with Redux Toolkit is `createEntityAdapter` API. It will make your slices less complicated and easier to manage. 
+
+- Abstracts more logic from components
+- Built-in CRUD methods
+- Automatic selector generation

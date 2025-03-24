@@ -1,11 +1,12 @@
 /* Retrieve and display posts from Redux*/
 import { useSelector } from 'react-redux'; 
-import { selectAllPosts, getPostsStatus, getPostsError } from './postSlice';
+import { selectPostIds, getPostsStatus, getPostsError } from './postSlice';
 import PostsExcerpt from './PostsExcerpt';
 
 const PostsList = () => {
 
-    const posts = useSelector(selectAllPosts); 
+    // Get an ordered list of post IDs
+    const orderedPostIds = useSelector(selectPostIds);
     // Retrieve the current status of posts
     const postsStatus = useSelector(getPostsStatus);
     // Fetch the error message (if any)
@@ -14,14 +15,15 @@ const PostsList = () => {
 
     let content;
     /* Track the fetching status (loading, succeeded, failed). */
+    // Handle loading state
     if (postsStatus === 'loading'){
         content = <p>"Loading..."</p>;
     } else if (postsStatus === 'succeeded'){
-        // Sort posts by most recent date
-        const orderedPosts = posts.slice().sort((a, b) => b.date.localeCompare(a.date))
-        // Render <PostsExcerpt /> for each post
-        content = orderedPosts.map(post => <PostsExcerpt key={post.id} post={post} />)
-    } else if (postsStatus === 'failed') {
+
+        // Map through orderedPostIds to render PostsExcerpt for each post
+        content = orderedPostIds.map(postId => <PostsExcerpt key={postId} postId={postId} />)
+        
+    } else if (postsStatus === 'failed') { // Handle error state
         // Display an error message.
         content = <p>{error}</p>;
     }
