@@ -1,4 +1,4 @@
-/* RTK Query API */
+/* API Slice */
 import { createApi, // used to define apiSlice
          fetchBaseQuery // used to fetch data
     } from '@reduxjs/toolkit/query/react'
@@ -8,15 +8,42 @@ export const apiSlice = createApi({
     baseQuery: fetchBaseQuery({ // Configure fetchBaseQuery
             baseUrl: 'http://localhost:3500' // Fetch mock data from local JSON server
         }),
+    /* Define mutation endpoints */
     endpoints: (builders) => ({
         getTodos: builders.query({ // Query that fetches todos from the /todos endpoint
             query: () => '/todos',
-        })
+        }),
+        addTodo: builders.mutation({ // Send POST request to /todos with a new todo item
+            query: (todo) => ({
+                url: '/todos',
+                method: 'POST',
+                body: todo
+            })
+        }),
+        updateTodo: builders.mutation({ // Send PATCH request to update a specific todo by id
+            query: (todo) => ({
+                url: `/todos/${todo.id}`,
+                method: 'PATCH',
+                body: todo
+            })
+        }),
+        deleteTodo: builders.mutation({ // Send DELETE request to remove a todo by id
+            query: ({ id }) => ({
+                url: `/todos/${id}`,
+                method: 'DELETE',
+                body: id
+            })
+        }),
     })
 })
 
-// Export auto-generated hook to access data
-export const { useGetTodosQuery } = apiSlice
+/* Export corresponding mutation endpoint hooks for use in components */
+export const { 
+        useGetTodosQuery,
+        useAddTodoMutation,
+        useUpdateTodoMutation,
+        useDeleteTodoMutation
+} = apiSlice
 
 
 /* 

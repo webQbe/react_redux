@@ -1,6 +1,13 @@
-import { useGetTodosQuery } from '../api/apiSlice' // fetches the list of todos
+/* TodoList Component  */
+import { // Import the mutation hooks from apiSlice
+    useGetTodosQuery,
+    useAddTodoMutation,
+    useUpdateTodoMutation,
+    useDeleteTodoMutation
+ } from '../api/apiSlice'
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome' 
-import { faTrash, faUpload } from '@fortawesome/free-solid-svg-icons' // FontAwesome icons
+import { faToiletPaperSlash, faTrash, faUpload } from '@fortawesome/free-solid-svg-icons' // FontAwesome icons
 import { useState } from 'react'
 
 const TodoList = () => {
@@ -15,9 +22,16 @@ const TodoList = () => {
         error 
     } = useGetTodosQuery()
 
-    /* Form Submission */
+    // Get mutation functions
+    const [addTodo] = useAddTodoMutation()
+    const [updateTodo] = useUpdateTodoMutation()
+    const [deleteTodo] = useDeleteTodoMutation()
+
+    /* Handle form submission */
     const handleSubmit = (e) => {
         e.preventDefault();
+        // Call addTodo with new todo data
+        addTodo({ userId: 1, title: newTodo, completed: false })
         setNewTodo('') // clear the input
     }
 
@@ -42,8 +56,29 @@ const TodoList = () => {
     let content;
     if (isLoading) {
         content = <p>Loading...</p> // "Loading..." when fetching data.
-    } else if (isSuccess) {
-        content = JSON.stringify(todos) // JSON stringified todos on successful fetch
+    } else if (isSuccess) { /* Render list of todos */
+        content =  todos.map(todo => {
+            return (
+                <article key={todo.id}>
+                    <div className="todo">
+                        {/* Checkbox calls updateTodo() to toggle completion status */}
+                        <input 
+                            type="checkbox" 
+                            checked={todo.completed}
+                            id={todo.id}
+                            onChange={() => updateTodo({ ...todo, completed: !todo.completed })} 
+                        />
+                        {/* Display todo */}
+                        <label htmlFor={todo.id}>{todo.title}</label>
+                    </div>
+                    {/* Delete button calls deleteTodo() to remove a todo */}
+                    <button className="trash" onClick={() => deleteTodo({ id: todo.id })}>
+                        <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                </article>
+            )
+        })
+
     } else if (isError) {
         content = <p>{error}</p> // An error message if the request fails
     }
