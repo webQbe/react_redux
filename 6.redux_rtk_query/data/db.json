@@ -8,12 +8,6 @@
     },
     {
       "userId": 1,
-      "id": "6",
-      "title": "qui ullam ratione quibusdam voluptatem quia omnis",
-      "completed": false
-    },
-    {
-      "userId": 1,
       "id": "8",
       "title": "quo adipisci enim quam ut ab",
       "completed": true
@@ -1165,16 +1159,10 @@
       "completed": false
     },
     {
+      "id": "d17a",
       "userId": 1,
-      "title": "Another new todo!",
-      "completed": false,
-      "id": "201"
-    },
-    {
-      "id": "4626",
-      "userId": 1,
-      "title": "ggg",
-      "completed": false
+      "title": "Learn new things",
+      "completed": true
     }
   ]
 }
