@@ -1,8 +1,8 @@
 import { useSelector } from 'react-redux'
 import { selectUserById } from './usersSlice' // to fetch a user by ID
-import { selectAllPosts, selectPostsByUser } from '../posts/postSlice'
 import { Link, useParams } from 'react-router-dom'
 import React from 'react'
+import { useGetPostsByUserIdQuery } from '../posts/postSlice'
 
 let UserPage = () => {
     const { userId } = useParams() // Retrieve userId from URL
@@ -10,23 +10,34 @@ let UserPage = () => {
     // Select the user from Redux store
     const user = useSelector(state => selectUserById(state, Number(userId)))
 
-    // Get posts for a specific user
-    const postsForUser = useSelector(state => selectPostsByUser(state, Number(userId))) 
-    /* This improves performance because createSelector memoizes the results, preventing unnecessary re-renders if the state hasn't changed. */
-
-    // Display a title list of the user's posts as links
-    const postTitles = postsForUser.map(post => (
-        /* Each link navigate to SinglePostPage based on the post.id */
-        <li key={post.id}>
-            <Link to={`/post/${post.id}`}>{post.title}</Link>
-        </li>
-    ))
+    // Fetch posts filtered by user ID
+    const { 
+            data: postsForUser, 
+            isLoading, 
+            isSuccess, 
+            isError, 
+            error 
+        } = useGetPostsByUserIdQuery(userId);
+    
+   let content;
+   if (isLoading) {
+        content = <p>Loading...</p>
+   } else if (isSuccess) {
+        const { ids, entities } = postsForUser
+        content = ids.map(id => (
+            <li key={id}>
+                <Link to={`/post/${id}`}>{entities[id].title}</Link>
+            </li>
+        ))
+   } else if (isError) {
+        content = <p>{error}</p>;
+   }
 
   return (
         <section>
             <h2>{user?.name}</h2> {/* User’s name  */}
 
-            <ol>{postTitles}</ol> {/* User's post title list (links) */}
+            <ol>{content}</ol> {/* User's post title list (links) */}
         </section>
   )
 }

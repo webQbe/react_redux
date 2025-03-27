@@ -1,9 +1,10 @@
 import { use, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectPostById, updatePost, deletePost } from './postSlice';
+import { selectPostById } from './postSlice';
 import { useParams, useNavigate } from 'react-router-dom';
 
 import { selectAllUsers } from '../users/usersSlice';
+import { useUpdatePostMutation, useDeletePostMutation } from './postSlice';
 
 
 const EditPostForm = () => {
@@ -11,6 +12,10 @@ const EditPostForm = () => {
     /* Fetch the Post to Edit */
     const { postId } = useParams(); // extract postId from URL
     const navigate = useNavigate(); // To redirect
+
+    // Destructure the returned arrays 
+    const [updatePost, { isLoading }] = useUpdatePostMutation()
+    const [deletePost] = useDeletePostMutation()
 
     // Fetch the post by its ID from the Redux store
     const post = useSelector((state) => selectPostById(state, Number(postId)));
@@ -22,10 +27,6 @@ const EditPostForm = () => {
     const [title, setTitle] = useState(post?.title);
     const [content, setContent] = useState(post?.body);
     const [userId, setUserId] = useState(post?.userId);
-    // Manage API call states (idle or pending)
-    const [requestStatus, setRequestStatus] = useState('idle');
-
-    const dispatch = useDispatch()
 
     if (!post) {
         return (
@@ -41,16 +42,13 @@ const EditPostForm = () => {
                                             Number(e.target.value) ); 
     /* Save the Edited Post */
     // Ensure all fields are filled and no other request is in progress
-    const canSave = [title, content, userId].every(Boolean) && requestStatus === 'idle';
+    const canSave = [title, content, userId].every(Boolean) && !isLoading;
     
-    const onSavePostClicked = () => {
+    const onSavePostClicked = async () => {
         if (canSave) {
             try {
-                // Update API call state
-                setRequestStatus('pending');
-
-                // Send the updated data to the server
-                dispatch(updatePost({ id: post.id, title, body: content, userId, reactions: post.reactions })).unwrap();
+                // Call updatePost to update a post
+                await updatePost({ id: post.id, title, body: content, userId }).unwrap()
 
                 // Reset the form fields
                 setTitle('')
@@ -62,11 +60,6 @@ const EditPostForm = () => {
             } catch (err) {
                 // Otherwise, log the error
                 console.error('Failed to save the post', err);
-
-            } finally {
-                // Reset API call state
-                setRequestStatus('idle');
-
             }
         }
     }
@@ -79,11 +72,10 @@ const EditPostForm = () => {
         </option>
     ))
 
-    const onDeletePostClicked = () => {
+    const onDeletePostClicked = async () => {
         try{
-            setRequestStatus('pending')
-            // Dispatch deletePost action with post's ID
-            dispatch(deletePost({ id: post.id })).unwrap() 
+            // Call deletePost to delete a post
+            await deletePost({ id: post.id }).unwrap()
 
             setTitle('')
             setContent('')
@@ -91,8 +83,6 @@ const EditPostForm = () => {
             navigate('/') // Navigate back to the homepage
         } catch (err) {
             console.log('Failed to delete the post', err)
-        } finally {
-            setRequestStatus('idle')
         }
     }
 

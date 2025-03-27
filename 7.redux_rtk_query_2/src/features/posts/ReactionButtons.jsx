@@ -1,6 +1,5 @@
 /* Reaction Component */
-import { useDispatch } from "react-redux"; 
-import { reactionAdded } from "./postSlice";
+import { useAddReactionMutation } from "./postSlice"
 
 // Define reaction emojis
 const reactionEmoji = {
@@ -12,7 +11,12 @@ const reactionEmoji = {
 }
 
 const ReactionButtons = ({ post }) => {
-    const dispatch = useDispatch()
+
+    // Destructure returned array
+    const [addReaction] = useAddReactionMutation()
+
+    // Ensure `post.reactions` is always defined
+    const reactions = post.reactions || {};
 
     // Map through each reaction to create buttons
     const reactionButtons = Object.entries(reactionEmoji).map(([name, emoji]) => {
@@ -21,20 +25,29 @@ const ReactionButtons = ({ post }) => {
                 key={name}
                 type="button"
                 className="reactionButton"
-                onClick={() => 
-                    // Dispatch reactionAdded action when button is clicked
-                    dispatch(reactionAdded(
-                        // Dispatch postId and reaction with reactionAdded
-                        { postId: post.id, reaction: name }
-                    ))
-                }>
-                {/* Display the emoji & reaction count */}
-                { emoji /* If name = "thumbsUp", then emoji = "👍" */ } 
-                { post.reactions[name] /* Accesses the reaction count */ }
+                onClick={() => {
+                    /*  Update reactions */
+                    // Access current reaction's count
+                    const newValue = (reactions[name] || 0) + 1; 
+                    // If undefined/no reactions yet, default to 0
+                    // On click, increment current reaction's count by 1 
+
+                    /* Calls addReaction() mutation (provided by RTK Query) */
+                    addReaction({ 
+                        postId: post.id, // Identify which post is being updated
+                        reactions: { 
+                            ...reactions, // Keep all previous reactions unchanged
+                            [name]: newValue // Update only current reaction's count
+                        } 
+                    })
+                }}>
+                { emoji } 
+                { reactions[name] || 0 } {/* Show current count of that reaction (defaulting to 0 if not set). */}
             </button>
         )
     })
 
+// Render reaction buttons
 return <div>{reactionButtons}</div>
 
 }

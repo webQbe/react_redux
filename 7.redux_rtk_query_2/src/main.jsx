@@ -6,14 +6,12 @@ import App from './App.jsx';
 import { store } from './app/store.jsx';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-/* Import Actions */
-import { fetchPosts } from './features/posts/postSlice.jsx'; 
+
+import { extendedApiSlice } from './features/posts/postSlice.jsx';
 import { fetchUsers } from './features/users/usersSlice.jsx';
 
-// Dispatch fetchPosts before rendering
-store.dispatch(
-                fetchPosts() /* Any component that use useSelector to access posts will have the latest data when the app starts. */
-              );
+
+store.dispatch(extendedApiSlice.endpoints.getPosts.initiate());
 
 // Dispatch fetchUsers
 store.dispatch(fetchUsers());

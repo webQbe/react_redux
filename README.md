@@ -6,6 +6,7 @@
 4. Creating a Blog App that supports all Redux **CRUD operations**
 5. Applying **Optimization Techniques** to React-Redux Blog App project
 6. Creating Todo List App with **RTK Query** 
+7. Adding **RTK Query** with **Normalized Cache State** in **Optimistic Updates** to the React-Redux blog project
 
 
 ## Getting Started 

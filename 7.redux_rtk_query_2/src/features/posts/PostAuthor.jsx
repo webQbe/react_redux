@@ -1,6 +1,7 @@
 /* Display the Post Author */
 import { useSelector } from "react-redux";
 import { selectAllUsers } from "../users/usersSlice";
+import { Link } from "react-router-dom";
 
 const PostAuthor = ({ userId }) => {
     // Get all users from Redux store
@@ -9,8 +10,17 @@ const PostAuthor = ({ userId }) => {
     const author = users.find(user => user.id === userId); 
 
   return (
-    // Display the author's name or fallback text
-    <span>by {author ? author.name : 'Unknown author'}</span>
+    <span>by {
+              author ? 
+              
+                <Link to={`/user/${userId}`}>
+                    {author.name}
+                </Link> 
+
+                :  'Unknown author'
+
+              }
+    </span>
   )
 }
 

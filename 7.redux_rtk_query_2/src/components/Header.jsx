@@ -1,11 +1,7 @@
 /* Header Component */
 import { Link } from "react-router-dom" // Re-renders when count updates issue persists
-import { useDispatch, useSelector } from "react-redux"
-import { increaseCount, getCount } from "../features/posts/postSlice"
-
+ 
 const Header = () => {
-    const dispatch = useDispatch() // Provide function to dispatch actions
-    const count = useSelector(getCount) // Retrieve current count value
 
     return (
         <header className="header">
@@ -25,14 +21,6 @@ const Header = () => {
                     <li><Link to="user">Users</Link></li> {/*  Link to UsersList */}
 
                 </ul>
-                
-                {/* Add button */}
-                <button 
-                    // Dispatch increaseCount() to update counter
-                    onClick={() => dispatch(increaseCount())}
-                >
-                    {count} {/* Current count value */}
-                </button>
 
             </nav>
             

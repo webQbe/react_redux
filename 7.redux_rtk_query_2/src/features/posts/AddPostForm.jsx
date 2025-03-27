@@ -1,13 +1,21 @@
 /* Component for Adding Posts */
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import { addNewPost } from './postSlice'; 
 import { selectAllUsers } from '../users/usersSlice'; 
 import { useNavigate } from 'react-router-dom';
+import { useAddNewPostMutation } from './postSlice';
 
 const AddPostForm = () => {
-    const dispatch = useDispatch() // To dispatch
+
+    // Destructure the returned array from useAddNewPostMutation()
+    const [addNewPost, { isLoading }] = useAddNewPostMutation()
+    
+    /* Destructuring the returned array:
+        addNewPost → A function that, when called, triggers the mutation (a POST request to create a new post).
+        isLoading → A boolean value that tells if the request is currently in progress (true while sending, false when done). 
+    */
+
     const navigate = useNavigate() // To redirect
 
     /* State for Form Inputs */
@@ -15,9 +23,6 @@ const AddPostForm = () => {
     const [title, setTitle ] = useState('');
     const [content, setContent ] = useState('');
     const [userId, setUserId ] = useState('');
-
-    // Request Status State
-    const [addRequestStatus, setAddRequestStatus] = useState('idle') // default: 'idle' (no requests)
 
     // Get users from Redux store
     const users = useSelector(selectAllUsers);
@@ -29,18 +34,14 @@ const AddPostForm = () => {
     const onAuthorChanged = e => setUserId(e.target.value);
 
     // Tracks form input values & ensure all fields are filled
-    const canSave = [title, content, userId].every(Boolean) && addRequestStatus === 'idle';
+    const canSave = [title, content, userId].every(Boolean) && !isLoading;
 
     /* Handle post submission */
-    const onSavePostClicked = () => {
+    const onSavePostClicked = async () => {
         if (canSave) {
             try {
-                // Set request status to pending
-                setAddRequestStatus('pending')
-                // Dispatch addNewPost() & unwrap the promise
-                dispatch(addNewPost({ title, body: content, userId }))
-                                    .unwrap() // Extract the actual fulfilled value or throw the error if the action was rejected
-
+                // Call addNewPost to send a new post
+                await addNewPost({ title, body: content, userId }).unwrap()        
 
                 // Reset form fields after a successful request
                 setTitle('')
@@ -50,9 +51,6 @@ const AddPostForm = () => {
             } catch (err) { 
                 // Handles errors
                 console.error('Failed to save the post', err)
-            } finally {
-                // Resets request status to 'idle'
-                setAddRequestStatus('idle')
             }
         }
     }
