@@ -1,12 +1,14 @@
 # React-Redux Series
 
-1. ([Implementing **Redux Toolkit** for Global State Management with React](https://github.com/webQbe/redux_toolkit))
+1. [Implementing **Redux Toolkit** for Global State Management with React](https://github.com/webQbe/redux_toolkit)
 2. Building a simple **React Bulletin Board** app
 3. Creating Async Redux Thunk to **Fetch data** from and **Post data** to a REST API
 4. Creating a Blog App that supports all Redux **CRUD operations**
 5. Applying **Optimization Techniques** to React-Redux Blog App project
 6. Creating Todo List App with **RTK Query** 
 7. Adding **RTK Query** with **Normalized Cache State** in **Optimistic Updates** to the React-Redux blog project
+8. [Setting up **Log-in Flow with JWT Authentication** in React & Redux](https://github.com/webQbe/redux_auth)
+
 
 
 ## Getting Started 
