@@ -1,5 +1,7 @@
 # RTK Query with Normalized Cache state in Optimistic Updates
+This repo is an adaptation of [React Redux Toolkit Tutorials](https://www.youtube.com/playlist?list=PL0Zuz27SZ-6M1J5I1w2-uZx36Qp6qhjKo) by Dave Gray. 
 
+I followed the tutorial series to learn followings:
 - Adding **RTK Query** with **Normalized Cache State** in **Optimistic Updates** to React-Redux blog project
 - Using **JSON-Server** as the backend
 
@@ -22,7 +24,6 @@
 7. Click `Diff` to see any changes you make
 
 ## Inpecting Network Requests
-
 1. Open blog app and press **F12** and select **Network** > **XHR** tab
 2. Open user link at the top *(E.g. Request is sent to `posts/?userId=1`)*
 3. Go to a post and open the user page again (No request is sent due to caching)
@@ -32,3 +33,10 @@
 7. Check for **`PUT`** request to `/posts/{*id*}`
 8. Ensure cache is invalidated by a **`GET`** request to `/posts`
 9. Click on a reaction button to inspect requests
+
+
+## Credits
+Original tutorial: [React Redux Toolkit Tutorials](https://www.youtube.com/playlist?list=PL0Zuz27SZ-6M1J5I1w2-uZx36Qp6qhjKo) — Dave Gray.
+
+## License
+MIT License
