@@ -1,5 +1,7 @@
 # React-Redux Performance Techniques & Optimization
+This repo is an adaptation of [React Redux Toolkit Tutorials](https://www.youtube.com/playlist?list=PL0Zuz27SZ-6M1J5I1w2-uZx36Qp6qhjKo) by Dave Gray. 
 
+I followed the tutorial series to learn followings:
 - Applying **Optimization Techniques** to React-Redux Blog App project
 - Fixing re-rendering all posts when adding reaction to one post
 - **Using Memoized Selector in Redux Toolkit (RTK)**
@@ -58,3 +60,9 @@ The best part of using of normalized data with Redux Toolkit is `createEntityAda
 - Abstracts more logic from components
 - Built-in CRUD methods
 - Automatic selector generation
+
+## Credits
+Original tutorial: [React Redux Toolkit Tutorials](https://www.youtube.com/playlist?list=PL0Zuz27SZ-6M1J5I1w2-uZx36Qp6qhjKo) — Dave Gray.
+
+## License
+MIT License
